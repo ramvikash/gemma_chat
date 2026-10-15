@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme.dart';
@@ -10,7 +9,7 @@ import 'views/chat_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterGemma.initialize();
+  await initGemma();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ChatViewModel(GemmaService(), ModelStore())..start(),
