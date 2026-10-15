@@ -8,6 +8,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_gemma: any   # pin to the latest version after `flutter pub get`
+  flutter_gemma_mediapipe: any   # engine for .task models
+  flutter_gemma_litertlm: any    # engine for .litertlm models
   provider: any
   flutter_markdown: any
   shared_preferences: any
