@@ -1,7 +1,16 @@
 import 'package:flutter_gemma/core/model.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:flutter_gemma_litertlm/flutter_gemma_litertlm.dart';
+import 'package:flutter_gemma_mediapipe/flutter_gemma_mediapipe.dart';
 
 import '../models/llm_model.dart';
+
+/// Registers the inference engines (flutter_gemma 1.0+ makes them opt-in).
+/// .task files use MediaPipeEngine, .litertlm files use LiteRtLmEngine.
+Future<void> initGemma({String? token}) => FlutterGemma.initialize(
+      huggingFaceToken: token,
+      inferenceEngines: const [LiteRtLmEngine(), MediaPipeEngine()],
+    );
 
 /// Wraps flutter_gemma. All plugin calls live here, so if the package API
 /// changes between versions, this is the only file you edit.
@@ -19,11 +28,18 @@ class GemmaService {
 
   /// Downloads the model if missing and makes it the active one.
   /// Calling it for an already-installed model skips the download.
-  Future<void> install(LlmModel m, String token, void Function(int percent) onProgress) =>
-      FlutterGemma.installModel(modelType: _type(m.family))
-          .fromNetwork(m.url, token: token.isEmpty ? null : token)
-          .withProgress(onProgress)
-          .install();
+  Future<void> install(LlmModel m, String token, void Function(int percent) onProgress) async {
+    final t = token.trim();
+    if (t.isNotEmpty) {
+      try {
+        await initGemma(token: t);
+      } catch (_) {} // already initialized: the per-download token below still applies
+    }
+    await FlutterGemma.installModel(modelType: _type(m.family))
+        .fromNetwork(m.url, token: t.isEmpty ? null : t)
+        .withProgress(onProgress)
+        .install();
+  }
 
   Future<void> load() async {
     await _model?.close();
