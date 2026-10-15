@@ -1,0 +1,15 @@
+name: gemma_chat
+description: On-device multi-model LLM chat (Flutter, MVVM)
+publish_to: none
+version: 1.0.0
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_gemma: any   # pin to the latest version after `flutter pub get`
+  provider: any
+  flutter_markdown: any
+  shared_preferences: any
+flutter:
+  uses-material-design: true
